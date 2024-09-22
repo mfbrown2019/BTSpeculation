@@ -1,22 +1,17 @@
 import { useEffect, useState } from 'react';
 import '../Styles/Home.css';
-import Tape from './Tape.jsx'
-
+import Chart from './Chart.jsx'
 function Home() {
 
     const [State, setState] = useState({
-        count: 1,
-        msg: "",
         personalStocks: [],
-        tick: ""
+        tick: "AAPl",
+        chartBool: true,
+        likeIt: "",
+        loveIt: "",
+        gotToHaveIt: ""
     });
-
-    const increment = () => {
-        setState({
-            ...State,
-            count: State.count + 1
-        })
-    }
+    
 
     const AddStockToList = async () => {
         if (State.tick !== "") {
@@ -25,7 +20,7 @@ function Home() {
 
             setState({
                 ...State,
-                personalStocks: [...State.personalStocks, result],
+                personalStocks: [...State.personalStocks, { ...result, likeIt: State.likeIt, loveIt: State.loveIt, gotToHaveIt: State.gotToHaveIt }],
                 tick: ""
             })
         }
@@ -34,35 +29,66 @@ function Home() {
     const RemoveFromList = (itemIndex) => {
         setState({
             ...State,
-            personalStocks: State.personalStocks.filter((stock, index) => index !== itemIndex)
+            personalStocks: State.personalStocks.filter((stock, index) => index !== itemIndex),
+            chartBool: false
+        })
+    }
+
+    const SetChart = () => {
+        setState({
+            ...State,
+            chartBool: true
         })
     }
 
     return (
         <div className="Home">
-            <Tape />
             <h1 id="tableLabel">BTSpeculation</h1>
-            <button onClick={increment}>Refresh</button>
-            
-            <div>
-                <input placeholder="Ticker" value={State.tick} onChange={e => setState({ ...State, tick: e.target.value })}></input>
-                <button onClick={AddStockToList}>Add to list</button>
+
+            <div className="CenterAllV">
+                <strong><p>{State.tick}</p></strong>
+                <input placeholder="Ticker..." value={State.tick} onChange={(e) => setState({ ...State, tick: e.target.value.toUpperCase()})}></input>
+                <button className="Thick" onClick={SetChart}>Set Chart</button>
             </div>
+            {
+                State.chartBool ?
+                <>
+                <div className="DisplayFlexCenter">
+                    <div className="LLG">
+                        <input type="number" onChange={e => setState({...State, likeIt: e.target.value})} placeholder="Like It..."></input>
+                        <input type="number" onChange={e => setState({ ...State, loveIt: e.target.value })} placeholder="Love It..."></input>
+                        <input type="number" onChange={e => setState({ ...State, gotToHaveIt: e.target.value })} placeholder="Got To Have It..."></input>
+                    </div>
+                    <button className="Thick" onClick={AddStockToList}>Add to list</button>
+                </div>
+                
+                <div className="Chart">
+                    <Chart tick={State.tick} />
+                </div>
+               
+                </> : null
+            }
 
             {
                 State.personalStocks.map((stock, index) => {
-                    return <div className="PersonalList" key={index}>
-                                <div className="DisplayInLIne">
-                                    <strong><p>{stock.symbol}</p></strong>
-                                    <p>Open: {stock.open}</p>
-                                    <p>Close: {stock.close}</p>
-                                    <p>High: {stock.high}</p>
-                                    <p>low: {stock.low}</p>
-                                    <p>Volume: {stock.volume}</p>
-                                </div>
-                                
-                                <button onClick={ () => RemoveFromList(index) }>X</button>
-                           </div>
+                    return (
+                        <div className="stock-item" key={index}>
+                            <div className="stock-details">
+                                <strong className="stock-symbol">{stock.symbol}</strong>
+                                <p>Open: {stock.open}</p>
+                                <p>Close: {stock.close}</p>
+                                <p>High: {stock.high}</p>
+                                <p>Low: {stock.low}</p>
+                                <p>Volume: {stock.volume}</p>
+                            </div>
+                            <div>
+                                <p className={stock.close < parseFloat(stock.likeIt) ? "Green" : "Red" }>Like It: {stock.likeIt}</p>
+                                <p className={stock.close < parseFloat(stock.loveIt) ? "Green" : "Red" }>Love It: {stock.loveIt}</p>
+                                <p className={stock.close < parseFloat(stock.gotToHaveIt) ? "Green" : "Red" }>Got To Have It: {stock.gotToHaveIt}</p>
+                            </div>
+                            <button className="remove-button" onClick={() => RemoveFromList(index)}>Remove</button>
+                        </div>
+                    );
                 })
             }
 
