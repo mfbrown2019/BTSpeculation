@@ -1,4 +1,10 @@
-﻿
+﻿body {
+    padding: 0px;
+}
+
+.mar {
+    margin: 0px;
+}
 .PersonalList {
     display: flex;
     justify-content: space-between;
@@ -26,3 +32,4 @@
     justify-content: space-around;
     width: 100%;
 }
+

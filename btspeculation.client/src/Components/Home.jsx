@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import '../Styles/Home.css';
+import Tape from './Tape.jsx'
 
 function Home() {
 
@@ -38,10 +39,11 @@ function Home() {
     }
 
     return (
-        <div>
+        <div className="Home">
+            <Tape />
             <h1 id="tableLabel">BTSpeculation</h1>
             <button onClick={increment}>Refresh</button>
-
+            
             <div>
                 <input placeholder="Ticker" value={State.tick} onChange={e => setState({ ...State, tick: e.target.value })}></input>
                 <button onClick={AddStockToList}>Add to list</button>
