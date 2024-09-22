@@ -4,24 +4,67 @@ import '../Styles/Home.css';
 function Home() {
 
     const [State, setState] = useState({
-        count: 1
+        count: 1,
+        msg: "",
+        personalStocks: [],
+        tick: ""
     });
 
-
-
-    useEffect(() => {
-        console.log("here")
-    }, [State])
-
     const increment = () => {
-        setState({...State, count: State.count + 1})
+        setState({
+            ...State,
+            count: State.count + 1
+        })
+    }
+
+    const AddStockToList = async () => {
+        if (State.tick !== "") {
+            const response = await fetch("/api/Speculation/GetHistorical/" + State.tick.toUpperCase());
+            const result = await response.json();
+
+            setState({
+                ...State,
+                personalStocks: [...State.personalStocks, result],
+                tick: ""
+            })
+        }
+    }
+
+    const RemoveFromList = (itemIndex) => {
+        setState({
+            ...State,
+            personalStocks: State.personalStocks.filter((stock, index) => index !== itemIndex)
+        })
     }
 
     return (
         <div>
             <h1 id="tableLabel">BTSpeculation</h1>
-            <h3>{ State.count }</h3>
-            <button onClick={ increment }>Refresh</button>
+            <button onClick={increment}>Refresh</button>
+
+            <div>
+                <input placeholder="Ticker" value={State.tick} onChange={e => setState({ ...State, tick: e.target.value })}></input>
+                <button onClick={AddStockToList}>Add to list</button>
+            </div>
+
+            {
+                State.personalStocks.map((stock, index) => {
+                    return <div className="PersonalList" key={index}>
+                                <div className="DisplayInLIne">
+                                    <strong><p>{stock.symbol}</p></strong>
+                                    <p>Open: {stock.open}</p>
+                                    <p>Close: {stock.close}</p>
+                                    <p>High: {stock.high}</p>
+                                    <p>low: {stock.low}</p>
+                                    <p>Volume: {stock.volume}</p>
+                                </div>
+                                
+                                <button onClick={ () => RemoveFromList(index) }>X</button>
+                           </div>
+                })
+            }
+
+            
         </div>
     );
     
