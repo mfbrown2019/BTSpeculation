@@ -11,7 +11,7 @@ namespace BTSpeculation.Server.Controllers
         {
             using (HttpClient client = new HttpClient())
             {
-                string url = $"https://api.polygon.io/v1/open-close/{Ticker}/2024-09-20?adjusted=true&apiKey=JSyxXauRdpoHMGjFE0ZBTGKnAoWtoPsz";
+                string url = $"https://api.polygon.io/v1/open-close/{Ticker}/2024-09-20?adjusted=true&apiKey=";
                 // Send a GET request to the specified URL
                 var response = await client.GetAsync(url);
 

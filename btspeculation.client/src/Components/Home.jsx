@@ -1,7 +1,10 @@
 import { useEffect, useState } from 'react';
 import '../Styles/Home.css';
-import Chart from './Chart.jsx'
+import Chart from './Chart.jsx';
+
+
 function Home() {
+    
 
     const [State, setState] = useState({
         personalStocks: [],
@@ -43,6 +46,7 @@ function Home() {
 
     return (
         <div className="Home">
+
             <h1 id="tableLabel">BTSpeculation</h1>
 
             <div className="CenterAllV">
@@ -53,19 +57,18 @@ function Home() {
             {
                 State.chartBool ?
                 <>
-                <div className="DisplayFlexCenter">
-                    <div className="LLG">
-                        <input type="number" onChange={e => setState({...State, likeIt: e.target.value})} placeholder="Like It..."></input>
-                        <input type="number" onChange={e => setState({ ...State, loveIt: e.target.value })} placeholder="Love It..."></input>
-                        <input type="number" onChange={e => setState({ ...State, gotToHaveIt: e.target.value })} placeholder="Got To Have It..."></input>
+                    <div className="DisplayFlexCenter">
+                        <div className="LLG">
+                            <input type="number" onChange={e => setState({...State, likeIt: e.target.value})} placeholder="Like It..."></input>
+                            <input type="number" onChange={e => setState({ ...State, loveIt: e.target.value })} placeholder="Love It..."></input>
+                            <input type="number" onChange={e => setState({ ...State, gotToHaveIt: e.target.value })} placeholder="Got To Have It..."></input>
+                        </div>
+                        <button className="Thick" onClick={AddStockToList}>Add to list</button>
                     </div>
-                    <button className="Thick" onClick={AddStockToList}>Add to list</button>
-                </div>
                 
-                <div className="Chart">
-                    <Chart tick={State.tick} />
-                </div>
-               
+                    <div className="Chart">
+                        <Chart tick={State.tick} />
+                    </div>
                 </> : null
             }
 
